@@ -22,7 +22,15 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: AuthScreen(),
+        home: Consumer<Auth>(
+          builder: (context, auth, _) {
+            if (auth.isLoggedIn()) {
+              return HomeScreen();
+            } else {
+              return AuthScreen();
+            }
+          },
+        ),
         routes: {
           HomeScreen.routeName: (context) => HomeScreen(),
           AuthScreen.routeName: (context) => AuthScreen(),

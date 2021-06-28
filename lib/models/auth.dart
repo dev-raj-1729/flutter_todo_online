@@ -30,4 +30,8 @@ class Auth with ChangeNotifier {
       _token = responseData['token'];
     });
   }
+
+  bool isLoggedIn() {
+    return _token != null;
+  }
 }
