@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_todo_online/screens/auth_screen.dart';
 import 'package:flutter_todo_online/screens/home_screen.dart';
 
 void main() {
@@ -13,9 +14,10 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: HomeScreen(),
+      home: AuthScreen(),
       routes: {
         HomeScreen.routeName: (context) => HomeScreen(),
+        AuthScreen.routeName: (context) => AuthScreen(),
       },
     );
   }
