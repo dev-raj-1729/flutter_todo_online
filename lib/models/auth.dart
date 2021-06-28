@@ -17,7 +17,8 @@ class Auth with ChangeNotifier {
     required String password,
   }) {
     _user = User(name: name, email: email, username: username);
-    return http
+    final client = http.Client();
+    return client
         .post(Uri.parse('$_apiEndpoint/$_register'),
             body: json.encode({
               'name': name,
@@ -26,6 +27,7 @@ class Auth with ChangeNotifier {
               'password': password,
             }))
         .then((response) {
+      print(response.body);
       final responseData = json.decode(response.body);
       _token = responseData['token'];
     });
