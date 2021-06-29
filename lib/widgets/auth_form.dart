@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_todo_online/models/auth.dart';
+import 'package:flutter_todo_online/models/api.dart';
 import 'package:flutter_todo_online/models/constants.dart';
 import 'package:provider/provider.dart';
 
@@ -36,14 +36,14 @@ class _AuthFormState extends State<AuthForm> {
     }
     _formKey.currentState!.save();
     if (_authMode == AuthMode.signUp) {
-      Provider.of<Auth>(context, listen: false).signUp(
+      Provider.of<Api>(context, listen: false).signUp(
         name: _name,
         email: _email,
         username: _username,
         password: _password,
       );
     } else {
-      Provider.of<Auth>(context, listen: false).signIn(_username, _password);
+      Provider.of<Api>(context, listen: false).signIn(_username, _password);
     }
   }
 

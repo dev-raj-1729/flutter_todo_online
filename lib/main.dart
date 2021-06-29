@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_todo_online/models/auth.dart';
+import 'package:flutter_todo_online/models/api.dart';
 import 'package:flutter_todo_online/screens/auth_screen.dart';
 import 'package:flutter_todo_online/screens/home_screen.dart';
 import 'package:provider/provider.dart';
@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (context) => Auth(),
+          create: (context) => Api(),
         ),
       ],
       child: MaterialApp(
@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: Consumer<Auth>(
+        home: Consumer<Api>(
           builder: (context, auth, _) {
             if (auth.isLoggedIn()) {
               return HomeScreen();
