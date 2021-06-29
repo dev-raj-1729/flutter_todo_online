@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_todo_online/models/todo_item.dart';
 import 'package:flutter_todo_online/models/user.dart';
 import 'package:http/http.dart' as http;
 
@@ -11,6 +12,8 @@ class Api with ChangeNotifier {
 
   User? _user;
   String? _token;
+
+  List<TodoItem> _todos = [];
 
   Future<void> signUp({
     required String name,
@@ -44,6 +47,14 @@ class Api with ChangeNotifier {
       _token = responseData['token'];
       notifyListeners();
     });
+  }
+
+  List<TodoItem> get todos {
+    return [..._todos];
+  }
+
+  void addTodo(String title) {
+    _todos.add(TodoItem(title));
   }
 
   bool isLoggedIn() {
