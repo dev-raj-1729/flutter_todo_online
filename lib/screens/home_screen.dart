@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_todo_online/models/api.dart';
+import 'package:flutter_todo_online/widgets/todo_form.dart';
 import 'package:flutter_todo_online/widgets/todo_tile.dart';
 import 'package:provider/provider.dart';
 
@@ -16,9 +17,17 @@ class HomeScreen extends StatelessWidget {
         title: Text('To-do list'),
       ),
       body: ListView.builder(
-          itemCount: apiProvider.todos.length,
-          itemBuilder: (context, index) =>
-              TodoTile(apiProvider.todos[index].title)),
+        itemCount: apiProvider.todos.length,
+        itemBuilder: (context, index) =>
+            TodoTile(apiProvider.todos[index].title),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => showModalBottomSheet(
+          context: context,
+          builder: (context) => TodoForm(),
+        ),
+        child: Icon(Icons.add),
+      ),
     );
   }
 }

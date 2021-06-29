@@ -55,6 +55,7 @@ class Api with ChangeNotifier {
 
   void addTodo(String title) {
     _todos.add(TodoItem(title));
+    notifyListeners();
   }
 
   bool isLoggedIn() {
