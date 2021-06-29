@@ -63,6 +63,11 @@ class Api with ChangeNotifier {
     notifyListeners();
   }
 
+  void updateByIndex(int index, String title) {
+    _todos[index].title = title;
+    notifyListeners();
+  }
+
   bool isLoggedIn() {
     return _token != null;
   }

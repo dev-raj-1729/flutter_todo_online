@@ -3,7 +3,8 @@ import 'package:flutter_todo_online/models/api.dart';
 import 'package:provider/provider.dart';
 
 class TodoForm extends StatefulWidget {
-  const TodoForm({Key? key}) : super(key: key);
+  final int? index;
+  TodoForm([this.index]);
 
   @override
   _TodoFormState createState() => _TodoFormState();
@@ -18,7 +19,12 @@ class _TodoFormState extends State<TodoForm> {
       return;
     }
     _formKey.currentState!.save();
-    Provider.of<Api>(context, listen: false).addTodo(_title);
+    if (widget.index == null) {
+      Provider.of<Api>(context, listen: false).addTodo(_title);
+    } else {
+      Provider.of<Api>(context, listen: false)
+          .updateByIndex(widget.index!, _title);
+    }
     Navigator.of(context).pop();
   }
 
@@ -30,6 +36,11 @@ class _TodoFormState extends State<TodoForm> {
         children: [
           TextFormField(
             decoration: InputDecoration(labelText: 'Title'),
+            initialValue: widget.index != null
+                ? Provider.of<Api>(context, listen: false)
+                    .todos[widget.index!]
+                    .title
+                : null,
             validator: (title) {
               if (title != null && title.trim().isNotEmpty) {
                 return null;
