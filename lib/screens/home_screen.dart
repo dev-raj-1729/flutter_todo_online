@@ -19,7 +19,7 @@ class HomeScreen extends StatelessWidget {
       body: ListView.builder(
         itemCount: apiProvider.todos.length,
         itemBuilder: (context, index) =>
-            TodoTile(apiProvider.todos[index].title),
+            TodoTile(apiProvider.todos[index].title, index),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => showModalBottomSheet(

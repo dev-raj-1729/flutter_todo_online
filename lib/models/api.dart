@@ -58,6 +58,11 @@ class Api with ChangeNotifier {
     notifyListeners();
   }
 
+  void removeByIndex(int index) {
+    _todos.removeAt(index);
+    notifyListeners();
+  }
+
   bool isLoggedIn() {
     return _token != null;
   }

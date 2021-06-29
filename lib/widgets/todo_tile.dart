@@ -1,14 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_todo_online/models/api.dart';
+import 'package:provider/provider.dart';
 
 class TodoTile extends StatelessWidget {
   final String title;
-
-  const TodoTile(this.title);
+  final int index;
+  const TodoTile(this.title, this.index);
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      title: Text(title),
+    return Dismissible(
+      key: Key(index.toString()),
+      onDismissed: (_) {
+        Provider.of<Api>(context, listen: false).removeByIndex(index);
+      },
+      child: Card(
+        child: ListTile(
+          title: Text(title),
+        ),
+      ),
     );
   }
 }
