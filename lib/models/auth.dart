@@ -10,26 +10,37 @@ class Auth with ChangeNotifier {
   static const _profile = 'auth/profile';
   User? _user;
   String? _token;
-  Future<void> signIn({
+  Future<void> signUp({
     required String name,
     required String email,
     required String username,
     required String password,
   }) {
     _user = User(name: name, email: email, username: username);
-    final client = http.Client();
-    return client
-        .post(Uri.parse('$_apiEndpoint/$_register'),
-            body: json.encode({
-              'name': name,
-              'email': email,
-              'username': username,
-              'password': password,
-            }))
-        .then((response) {
+    return http.post(Uri.parse('$_apiEndpoint/$_register/'), body: {
+      "name": name,
+      "email": email,
+      "username": username,
+      "password": password,
+    }).then((response) {
       print(response.body);
+      print(response.statusCode);
       final responseData = json.decode(response.body);
       _token = responseData['token'];
+      notifyListeners();
+    });
+  }
+
+  Future<void> signIn(String username, String password) {
+    return http.post(Uri.parse('$_apiEndpoint/$_login/'), body: {
+      "username": username,
+      "password": password,
+    }).then((response) {
+      print(response.body);
+      print(response.statusCode);
+      final responseData = json.decode(response.body);
+      _token = responseData['token'];
+      notifyListeners();
     });
   }
 

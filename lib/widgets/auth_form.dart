@@ -36,12 +36,14 @@ class _AuthFormState extends State<AuthForm> {
     }
     _formKey.currentState!.save();
     if (_authMode == AuthMode.signUp) {
-      Provider.of<Auth>(context, listen: false).signIn(
+      Provider.of<Auth>(context, listen: false).signUp(
         name: _name,
         email: _email,
         username: _username,
         password: _password,
       );
+    } else {
+      Provider.of<Auth>(context, listen: false).signIn(_username, _password);
     }
   }
 
