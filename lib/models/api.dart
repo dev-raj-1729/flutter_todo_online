@@ -3,13 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_todo_online/models/user.dart';
 import 'package:http/http.dart' as http;
 
-class Auth with ChangeNotifier {
+class Api with ChangeNotifier {
   static const _apiEndpoint = 'https://todo-app-csoc.herokuapp.com';
   static const _register = 'auth/register';
   static const _login = 'auth/login';
   static const _profile = 'auth/profile';
+
   User? _user;
   String? _token;
+
   Future<void> signUp({
     required String name,
     required String email,
