@@ -13,7 +13,7 @@ class Api with ChangeNotifier {
   static const _create = 'todo/create/';
   User? _user;
   String? _token;
-
+  // TODO : add / at end of all links
   List<TodoItem> _todos = [];
 
   Future<void> signUp({
@@ -73,16 +73,27 @@ class Api with ChangeNotifier {
   void addTodo(String title) {
     _todos.add(TodoItem(title));
     notifyListeners();
+    http.post(
+      Uri.parse('$_apiEndpoint/$_create'),
+      body: {"title": title},
+    ).then((response) {
+      fetchTodos();
+      notifyListeners();
+    });
   }
 
   void removeByIndex(int index) {
+    final temp = _todos[index];
     _todos.removeAt(index);
+    http.delete(Uri.parse('$_apiEndpoint/$_getTodos${temp.id}/'));
     notifyListeners();
   }
 
   void updateByIndex(int index, String title) {
     _todos[index].title = title;
     notifyListeners();
+    http.patch(Uri.parse('$_apiEndpoint/$_getTodos${_todos[index].id}/'),
+        body: {"title": title});
   }
 
   bool isLoggedIn() {
