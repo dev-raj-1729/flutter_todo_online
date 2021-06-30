@@ -9,7 +9,8 @@ class Api with ChangeNotifier {
   static const _register = 'auth/register';
   static const _login = 'auth/login';
   static const _profile = 'auth/profile';
-
+  static const _getTodos = 'todo/';
+  static const _create = 'todo/create/';
   User? _user;
   String? _token;
 
@@ -51,6 +52,22 @@ class Api with ChangeNotifier {
 
   List<TodoItem> get todos {
     return [..._todos];
+  }
+
+  Future<void> fetchTodos() {
+    return http.get(Uri.parse('$_apiEndpoint/$_getTodos')).then(
+      (response) {
+        final responseData =
+            json.decode(response.body) as List<Map<String, dynamic>>;
+        _todos = [];
+        responseData.forEach(
+          (map) {
+            _todos.add(TodoItem.fromMap(map));
+          },
+        );
+        notifyListeners();
+      },
+    );
   }
 
   void addTodo(String title) {
