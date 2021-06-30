@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_todo_online/models/todo_item.dart';
 import 'package:flutter_todo_online/models/user.dart';
@@ -13,6 +14,7 @@ class Api with ChangeNotifier {
   static const _create = 'todo/create/';
   User? _user;
   String? _token;
+  Map<String, String> _authHeader = {};
   // TODO : add / at end of all links
   List<TodoItem> _todos = [];
 
@@ -33,6 +35,7 @@ class Api with ChangeNotifier {
       print(response.statusCode);
       final responseData = json.decode(response.body);
       _token = responseData['token'];
+      _authHeader = {HttpHeaders.authorizationHeader: _token!};
       notifyListeners();
     });
   }
@@ -46,6 +49,7 @@ class Api with ChangeNotifier {
       print(response.statusCode);
       final responseData = json.decode(response.body);
       _token = responseData['token'];
+      _authHeader = {HttpHeaders.authorizationHeader: _token!};
       notifyListeners();
     });
   }
@@ -55,7 +59,9 @@ class Api with ChangeNotifier {
   }
 
   Future<void> fetchTodos() {
-    return http.get(Uri.parse('$_apiEndpoint/$_getTodos')).then(
+    return http
+        .get(Uri.parse('$_apiEndpoint/$_getTodos'), headers: _authHeader)
+        .then(
       (response) {
         final responseData =
             json.decode(response.body) as List<Map<String, dynamic>>;
@@ -73,10 +79,10 @@ class Api with ChangeNotifier {
   void addTodo(String title) {
     _todos.add(TodoItem(title));
     notifyListeners();
-    http.post(
-      Uri.parse('$_apiEndpoint/$_create'),
-      body: {"title": title},
-    ).then((response) {
+    http
+        .post(Uri.parse('$_apiEndpoint/$_create'),
+            body: {"title": title}, headers: _authHeader)
+        .then((response) {
       fetchTodos();
       notifyListeners();
     });
@@ -85,15 +91,21 @@ class Api with ChangeNotifier {
   void removeByIndex(int index) {
     final temp = _todos[index];
     _todos.removeAt(index);
-    http.delete(Uri.parse('$_apiEndpoint/$_getTodos${temp.id}/'));
+    http.delete(
+      Uri.parse('$_apiEndpoint/$_getTodos${temp.id}/'),
+      headers: _authHeader,
+    );
     notifyListeners();
   }
 
   void updateByIndex(int index, String title) {
     _todos[index].title = title;
     notifyListeners();
-    http.patch(Uri.parse('$_apiEndpoint/$_getTodos${_todos[index].id}/'),
-        body: {"title": title});
+    http.patch(
+      Uri.parse('$_apiEndpoint/$_getTodos${_todos[index].id}/'),
+      body: {"title": title},
+      headers: _authHeader,
+    );
   }
 
   bool isLoggedIn() {
