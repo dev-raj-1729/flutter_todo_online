@@ -31,32 +31,38 @@ class _TodoFormState extends State<TodoForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: Column(
-        children: [
-          TextFormField(
-            decoration: InputDecoration(labelText: 'Title'),
-            initialValue:
-                widget.todoItem != null ? widget.todoItem!.title : null,
-            validator: (title) {
-              if (title != null && title.trim().isNotEmpty) {
-                return null;
-              }
-              return "Title cannot be empty";
-            },
-            onSaved: (title) {
-              _title = title!;
-            },
-          ),
-          Container(
-            alignment: Alignment.centerRight,
-            child: ElevatedButton(
-              onPressed: _submitForm,
-              child: Text('Ok'),
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Form(
+        key: _formKey,
+        child: Column(
+          children: [
+            TextFormField(
+              decoration: InputDecoration(labelText: 'Title'),
+              initialValue:
+                  widget.todoItem != null ? widget.todoItem!.title : null,
+              validator: (title) {
+                if (title != null && title.trim().isNotEmpty) {
+                  return null;
+                }
+                return "Title cannot be empty";
+              },
+              onSaved: (title) {
+                _title = title!;
+              },
             ),
-          ),
-        ],
+            SizedBox(
+              height: 5,
+            ),
+            Container(
+              alignment: Alignment.centerRight,
+              child: ElevatedButton(
+                onPressed: _submitForm,
+                child: Text('Ok'),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
