@@ -55,7 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: ListView.builder(
                 itemCount: apiProvider.todos.length,
                 itemBuilder: (context, index) =>
-                    TodoTile(apiProvider.todos[index].title, index),
+                    TodoTile(apiProvider.todos[index], index),
               ),
             );
           }),

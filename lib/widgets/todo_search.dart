@@ -35,7 +35,7 @@ class TodoSearch extends SearchDelegate<String> {
     return ListView.builder(
       itemCount: resultList.length,
       itemBuilder: (context, index) => TodoTile(
-        resultList[index].title,
+        resultList[index],
         index,
       ),
     );

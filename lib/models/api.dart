@@ -90,8 +90,9 @@ class Api with ChangeNotifier {
     });
   }
 
-  void removeByIndex(int index) {
-    print(index);
+  void removeById(int id) {
+    print(id);
+    final index = _todos.indexWhere((element) => element.id == id);
     final temp = _todos[index];
     _todos.removeAt(index);
     notifyListeners();
@@ -106,7 +107,8 @@ class Api with ChangeNotifier {
     });
   }
 
-  void updateByIndex(int index, String title) {
+  void updateById(int id, String title) {
+    final index = _todos.indexWhere((element) => element.id == id);
     _todos[index].title = title;
     notifyListeners();
     http
