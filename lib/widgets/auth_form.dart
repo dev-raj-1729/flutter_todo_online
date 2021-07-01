@@ -19,6 +19,7 @@ class _AuthFormState extends State<AuthForm> {
   late String _password;
   late String _username;
   final _passwordController = TextEditingController();
+  bool _loggingIn = false;
   void _switchAuthMode() {
     setState(() {
       if (_authMode == AuthMode.signIn) {
@@ -27,6 +28,7 @@ class _AuthFormState extends State<AuthForm> {
         _authMode = AuthMode.signIn;
       }
     });
+    _passwordController.clear();
     _formKey.currentState!.reset();
   }
 
@@ -35,15 +37,30 @@ class _AuthFormState extends State<AuthForm> {
       return;
     }
     _formKey.currentState!.save();
+    setState(() {
+      _loggingIn = true;
+    });
     if (_authMode == AuthMode.signUp) {
-      Provider.of<Api>(context, listen: false).signUp(
+      Provider.of<Api>(context, listen: false)
+          .signUp(
         name: _name,
         email: _email,
         username: _username,
         password: _password,
-      );
+      )
+          .then((_) {
+        setState(() {
+          _loggingIn = false;
+        });
+      });
     } else {
-      Provider.of<Api>(context, listen: false).signIn(_username, _password);
+      Provider.of<Api>(context, listen: false)
+          .signIn(_username, _password)
+          .then((_) {
+        setState(() {
+          _loggingIn = false;
+        });
+      });
     }
   }
 
@@ -137,16 +154,19 @@ class _AuthFormState extends State<AuthForm> {
                   SizedBox(
                     height: 20,
                   ),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                    ),
-                    onPressed: _submitForm,
-                    child: Text(
-                        _authMode == AuthMode.signIn ? 'Sign In' : 'Sign Up'),
-                  ),
+                  _loggingIn
+                      ? CircularProgressIndicator()
+                      : ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                          ),
+                          onPressed: _submitForm,
+                          child: Text(_authMode == AuthMode.signIn
+                              ? 'Sign In'
+                              : 'Sign Up'),
+                        ),
                   // TextButton(
                   //   onPressed: _switchAuthMode,
                   //   child: Text(
@@ -164,7 +184,7 @@ class _AuthFormState extends State<AuthForm> {
                         color: Colors.blue,
                       ),
                     ),
-                    onTap: _switchAuthMode,
+                    onTap: _loggingIn ? null : _switchAuthMode,
                   )
                 ],
               ),
