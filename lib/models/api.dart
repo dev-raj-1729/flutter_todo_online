@@ -54,6 +54,14 @@ class Api with ChangeNotifier {
     });
   }
 
+  void signOut() {
+    _token = null;
+    _todos = [];
+    _authHeader = {};
+    _user = null;
+    notifyListeners();
+  }
+
   List<TodoItem> get todos {
     return [..._todos];
   }

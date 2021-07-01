@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_todo_online/models/api.dart';
+import 'package:flutter_todo_online/widgets/main_drawer.dart';
 import 'package:flutter_todo_online/widgets/todo_form.dart';
 import 'package:flutter_todo_online/widgets/todo_search.dart';
 import 'package:flutter_todo_online/widgets/todo_tile.dart';
@@ -29,6 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
     // final apiProvider = Provider.of<Api>(context);?
 
     return Scaffold(
+      drawer: UserDrawer(),
       appBar: AppBar(
         centerTitle: true,
         title: Text('To-do list'),
