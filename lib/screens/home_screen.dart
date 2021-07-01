@@ -4,23 +4,50 @@ import 'package:flutter_todo_online/widgets/todo_form.dart';
 import 'package:flutter_todo_online/widgets/todo_tile.dart';
 import 'package:provider/provider.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   static const routeName = '/home';
   const HomeScreen({Key? key}) : super(key: key);
 
   @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  Future<void>? _fetch;
+  Future<void> fetch(BuildContext context) {
+    if (_fetch != null) {
+      return _fetch!;
+    } else {
+      _fetch = Provider.of<Api>(context, listen: false).fetchTodos();
+      return _fetch!;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final apiProvider = Provider.of<Api>(context);
+    // final apiProvider = Provider.of<Api>(context);?
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         title: Text('To-do list'),
       ),
-      body: ListView.builder(
-        itemCount: apiProvider.todos.length,
-        itemBuilder: (context, index) =>
-            TodoTile(apiProvider.todos[index].title, index),
-      ),
+      body: FutureBuilder<void>(
+          future: fetch(context),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            return Consumer<Api>(builder: (context, apiProvider, _) {
+              return ListView.builder(
+                itemCount: apiProvider.todos.length,
+                itemBuilder: (context, index) =>
+                    TodoTile(apiProvider.todos[index].title, index),
+              );
+            });
+          }),
       floatingActionButton: FloatingActionButton(
         onPressed: () => showModalBottomSheet(
           context: context,
