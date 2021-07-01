@@ -40,13 +40,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: CircularProgressIndicator(),
               );
             }
-            return Consumer<Api>(builder: (context, apiProvider, _) {
-              return ListView.builder(
-                itemCount: apiProvider.todos.length,
-                itemBuilder: (context, index) =>
-                    TodoTile(apiProvider.todos[index].title, index),
-              );
-            });
+            final apiProvider = Provider.of<Api>(context);
+            return ListView.builder(
+              itemCount: apiProvider.todos.length,
+              itemBuilder: (context, index) =>
+                  TodoTile(apiProvider.todos[index].title, index),
+            );
           }),
       floatingActionButton: FloatingActionButton(
         onPressed: () => showModalBottomSheet(
