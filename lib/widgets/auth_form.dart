@@ -147,11 +147,25 @@ class _AuthFormState extends State<AuthForm> {
                     child: Text(
                         _authMode == AuthMode.signIn ? 'Sign In' : 'Sign Up'),
                   ),
-                  TextButton(
-                    onPressed: _switchAuthMode,
-                    child: Text(
-                        _authMode == AuthMode.signIn ? 'Sign Up' : 'Sign In'),
+                  // TextButton(
+                  //   onPressed: _switchAuthMode,
+                  //   child: Text(
+                  //       _authMode == AuthMode.signIn ? 'Sign Up' : 'Sign In'),
+                  // ),
+                  SizedBox(
+                    height: 5,
                   ),
+                  InkWell(
+                    child: Text(
+                      _authMode == AuthMode.signIn
+                          ? "Don't have an Account?  Sign Up"
+                          : 'Existing User? Sign In',
+                      style: TextStyle(
+                        color: Colors.blue,
+                      ),
+                    ),
+                    onTap: _switchAuthMode,
+                  )
                 ],
               ),
             ),
