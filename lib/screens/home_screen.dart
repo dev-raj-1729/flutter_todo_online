@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_todo_online/models/api.dart';
 import 'package:flutter_todo_online/widgets/todo_form.dart';
+import 'package:flutter_todo_online/widgets/todo_search.dart';
 import 'package:flutter_todo_online/widgets/todo_tile.dart';
 import 'package:provider/provider.dart';
 
@@ -31,6 +32,14 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         centerTitle: true,
         title: Text('To-do list'),
+        actions: [
+          IconButton(
+            onPressed: () {
+              showSearch(context: context, delegate: TodoSearch());
+            },
+            icon: Icon(Icons.search),
+          )
+        ],
       ),
       body: FutureBuilder<void>(
           future: fetch(context),

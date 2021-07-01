@@ -116,6 +116,15 @@ class Api with ChangeNotifier {
         );
   }
 
+  List<TodoItem> searchFor(String sub) {
+    return sub.isEmpty
+        ? []
+        : _todos
+            .where((element) =>
+                element.title.toLowerCase().startsWith(sub.toLowerCase()))
+            .toList();
+  }
+
   bool isLoggedIn() {
     return _token != null;
   }
