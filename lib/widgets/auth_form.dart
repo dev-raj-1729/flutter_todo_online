@@ -20,16 +20,18 @@ class _AuthFormState extends State<AuthForm> {
   late String _username;
   final _passwordController = TextEditingController();
   bool _loggingIn = false;
+  String? _message;
   void _switchAuthMode() {
+    _passwordController.clear();
+    _formKey.currentState!.reset();
     setState(() {
       if (_authMode == AuthMode.signIn) {
         _authMode = AuthMode.signUp;
       } else {
         _authMode = AuthMode.signIn;
       }
+      _message = null;
     });
-    _passwordController.clear();
-    _formKey.currentState!.reset();
   }
 
   void _submitForm() {
@@ -39,6 +41,7 @@ class _AuthFormState extends State<AuthForm> {
     _formKey.currentState!.save();
     setState(() {
       _loggingIn = true;
+      _message = null;
     });
     if (_authMode == AuthMode.signUp) {
       Provider.of<Api>(context, listen: false)
@@ -48,15 +51,16 @@ class _AuthFormState extends State<AuthForm> {
         username: _username,
         password: _password,
       )
-          .then((_) {
+          .then((message) {
         setState(() {
           _loggingIn = false;
+          _message = message;
         });
       });
     } else {
       Provider.of<Api>(context, listen: false)
           .signIn(_username, _password)
-          .then((_) {
+          .then((message) {
         setState(() {
           _loggingIn = false;
         });
@@ -78,6 +82,10 @@ class _AuthFormState extends State<AuthForm> {
             child: SingleChildScrollView(
               child: Column(
                 children: [
+                  Text(
+                    _message ?? '',
+                    style: TextStyle(color: Colors.red),
+                  ),
                   if (_authMode == AuthMode.signUp)
                     TextFormField(
                       decoration: InputDecoration(

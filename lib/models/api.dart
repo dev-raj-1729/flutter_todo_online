@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_todo_online/models/constants.dart';
 import 'package:flutter_todo_online/models/todo_item.dart';
 import 'package:flutter_todo_online/models/user.dart';
 import 'package:http/http.dart' as http;
@@ -18,7 +19,17 @@ class Api with ChangeNotifier {
   // TODO : add / at end of all links
   List<TodoItem> _todos = [];
 
-  Future<void> signUp({
+  String _errorResolver(Map<String, dynamic>? emap) {
+    if (emap == null) {
+      return ErrorMessages.someError;
+    } else if (emap['non_field_errors'] != null) {
+      return ErrorMessages.invalidCred;
+    } else {
+      return emap.values.toList()[0][0];
+    }
+  }
+
+  Future<String?> signUp({
     required String name,
     required String email,
     required String username,
@@ -34,6 +45,9 @@ class Api with ChangeNotifier {
       print(response.body);
       print(response.statusCode);
       final responseData = json.decode(response.body);
+      if (response.statusCode != 200) {
+        return _errorResolver(responseData);
+      }
       _token = responseData['token'];
       _authHeader = {HttpHeaders.authorizationHeader: _token!};
       notifyListeners();
@@ -48,6 +62,9 @@ class Api with ChangeNotifier {
       print(response.body);
       print(response.statusCode);
       final responseData = json.decode(response.body);
+      if (response.statusCode != 200) {
+        return _errorResolver(responseData);
+      }
       _token = responseData['token'];
       _authHeader = {HttpHeaders.authorizationHeader: 'Token $_token'};
       notifyListeners();
