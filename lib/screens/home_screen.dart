@@ -50,10 +50,13 @@ class _HomeScreenState extends State<HomeScreen> {
               );
             }
             final apiProvider = Provider.of<Api>(context);
-            return ListView.builder(
-              itemCount: apiProvider.todos.length,
-              itemBuilder: (context, index) =>
-                  TodoTile(apiProvider.todos[index].title, index),
+            return RefreshIndicator(
+              onRefresh: apiProvider.fetchTodos,
+              child: ListView.builder(
+                itemCount: apiProvider.todos.length,
+                itemBuilder: (context, index) =>
+                    TodoTile(apiProvider.todos[index].title, index),
+              ),
             );
           }),
       floatingActionButton: FloatingActionButton(

@@ -73,6 +73,7 @@ class Api with ChangeNotifier {
             _todos.add(TodoItem.fromMap(map));
           },
         );
+        notifyListeners();
       },
     );
   }
@@ -90,16 +91,19 @@ class Api with ChangeNotifier {
   }
 
   void removeByIndex(int index) {
+    print(index);
     final temp = _todos[index];
     _todos.removeAt(index);
     notifyListeners();
     http
         .delete(
-          Uri.parse('$_apiEndpoint/$_getTodos${temp.id}/'),
-          headers: _authHeader,
-        )
-        .then((value) => print(value.statusCode));
-    notifyListeners();
+      Uri.parse('$_apiEndpoint/$_getTodos${temp.id}/'),
+      headers: _authHeader,
+    )
+        .then((value) {
+      notifyListeners();
+      print(value.statusCode);
+    });
   }
 
   void updateByIndex(int index, String title) {
