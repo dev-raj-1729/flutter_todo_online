@@ -49,7 +49,7 @@ class Api with ChangeNotifier {
       print(response.statusCode);
       final responseData = json.decode(response.body);
       _token = responseData['token'];
-      _authHeader = {HttpHeaders.authorizationHeader: _token!};
+      _authHeader = {HttpHeaders.authorizationHeader: 'Token $_token'};
       notifyListeners();
     });
   }
@@ -59,19 +59,20 @@ class Api with ChangeNotifier {
   }
 
   Future<void> fetchTodos() {
+    print(_authHeader);
     return http
         .get(Uri.parse('$_apiEndpoint/$_getTodos'), headers: _authHeader)
         .then(
       (response) {
-        final responseData =
-            json.decode(response.body) as List<Map<String, dynamic>>;
+        final responseData = json.decode(response.body);
         _todos = [];
+        // TODO : Remove debug statements
+        print(responseData);
         responseData.forEach(
           (map) {
             _todos.add(TodoItem.fromMap(map));
           },
         );
-        notifyListeners();
       },
     );
   }
@@ -83,29 +84,36 @@ class Api with ChangeNotifier {
         .post(Uri.parse('$_apiEndpoint/$_create'),
             body: {"title": title}, headers: _authHeader)
         .then((response) {
+      print(response.body);
       fetchTodos();
-      notifyListeners();
     });
   }
 
   void removeByIndex(int index) {
     final temp = _todos[index];
     _todos.removeAt(index);
-    http.delete(
-      Uri.parse('$_apiEndpoint/$_getTodos${temp.id}/'),
-      headers: _authHeader,
-    );
+    notifyListeners();
+    http
+        .delete(
+          Uri.parse('$_apiEndpoint/$_getTodos${temp.id}/'),
+          headers: _authHeader,
+        )
+        .then((value) => print(value.statusCode));
     notifyListeners();
   }
 
   void updateByIndex(int index, String title) {
     _todos[index].title = title;
     notifyListeners();
-    http.patch(
-      Uri.parse('$_apiEndpoint/$_getTodos${_todos[index].id}/'),
-      body: {"title": title},
-      headers: _authHeader,
-    );
+    http
+        .patch(
+          Uri.parse('$_apiEndpoint/$_getTodos${_todos[index].id}/'),
+          body: {"title": title},
+          headers: _authHeader,
+        )
+        .then(
+          (value) => print(value.statusCode),
+        );
   }
 
   bool isLoggedIn() {
