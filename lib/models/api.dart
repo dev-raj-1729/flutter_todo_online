@@ -21,7 +21,7 @@ class Api with ChangeNotifier {
   List<TodoItem> _todos = [];
 
   User? get user {
-    if (user == null) return null;
+    if (_user == null) return null;
     return User(
         email: _user!.email, name: _user!.name, username: _user!.username);
   }
