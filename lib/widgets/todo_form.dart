@@ -72,7 +72,7 @@ class _TodoFormState extends State<TodoForm> {
               alignment: Alignment.centerRight,
               child: ElevatedButton(
                 onPressed: _submitForm,
-                child: Text('Add'),
+                child: Text(widget.todoItem == null ? 'Add' : 'Update'),
               ),
             ),
           ],

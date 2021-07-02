@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_todo_online/models/api.dart';
 import 'package:flutter_todo_online/models/constants.dart';
@@ -78,11 +80,13 @@ class _AuthFormState extends State<AuthForm> {
 
   @override
   Widget build(BuildContext context) {
+    final mediaQuery = MediaQuery.of(context);
     return Container(
-      decoration: BoxDecoration(),
-      height: _authMode == AuthMode.signIn ? 320 : 460,
+      height: min(_authMode == AuthMode.signIn ? 320 : 460,
+          mediaQuery.size.height * 0.60),
       padding: EdgeInsets.all(15),
       child: Card(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         child: Container(
           padding: EdgeInsets.only(left: 20, right: 20, top: 20),
           child: Form(
@@ -201,7 +205,8 @@ class _AuthFormState extends State<AuthForm> {
                       ),
                     ),
                     onTap: _loggingIn ? null : _switchAuthMode,
-                  )
+                  ),
+                  SizedBox(height: 10)
                 ],
               ),
             ),

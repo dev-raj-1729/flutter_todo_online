@@ -33,8 +33,15 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       drawer: UserDrawer(),
       appBar: AppBar(
+        backgroundColor: Colors.white,
+        titleTextStyle: TextStyle(color: Colors.deepPurple),
+        iconTheme:
+            Theme.of(context).iconTheme.copyWith(color: Colors.deepPurple),
         centerTitle: true,
-        title: Text('To-do list'),
+        title: Text(
+          'To Do List',
+          style: TextStyle(color: Colors.deepPurple),
+        ),
         actions: [
           IconButton(
             onPressed: () {
