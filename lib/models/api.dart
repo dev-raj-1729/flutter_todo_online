@@ -183,7 +183,7 @@ class Api with ChangeNotifier {
     }
   }
 
-  void removeById(int id) async {
+  Future<void> removeById(int id) async {
     final index = _todos.indexWhere((element) => element.id == id);
     final temp = _todos[index];
     _todos.removeAt(index);

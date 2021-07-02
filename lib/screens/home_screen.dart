@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_todo_online/models/api.dart';
+import 'package:flutter_todo_online/widgets/alert.dart';
 import 'package:flutter_todo_online/widgets/main_drawer.dart';
 import 'package:flutter_todo_online/widgets/todo_form.dart';
 import 'package:flutter_todo_online/widgets/todo_search.dart';
@@ -56,8 +57,11 @@ class _HomeScreenState extends State<HomeScreen> {
               onRefresh: apiProvider.fetchTodos,
               child: ListView.builder(
                 itemCount: apiProvider.todos.length,
-                itemBuilder: (context, index) =>
-                    TodoTile(apiProvider.todos[index], index),
+                itemBuilder: (context, index) => TodoTile(
+                  apiProvider.todos[index],
+                  index,
+                  (message) => Alerts.errorSnackBar(context, message),
+                ),
               ),
             );
           }),
