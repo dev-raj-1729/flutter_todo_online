@@ -8,10 +8,14 @@ class UserDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final mediaData = MediaQuery.of(context);
+    final apiProvider = Provider.of<Api>(context);
     return Drawer(
       child: Column(
         children: [
           SizedBox(height: mediaData.padding.top),
+          CircleAvatar(
+            backgroundImage: apiProvider.userImage,
+          ),
           ListTile(
             leading: Icon(Icons.logout),
             title: Text('Logout'),
