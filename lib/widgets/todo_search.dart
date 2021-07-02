@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_todo_online/models/api.dart';
-import 'package:flutter_todo_online/widgets/alert.dart';
-import 'package:flutter_todo_online/widgets/todo_tile.dart';
 import 'package:provider/provider.dart';
+
+import '../models/api.dart';
+import 'alert.dart';
+import 'todo_tile.dart';
 
 class TodoSearch extends SearchDelegate<String> {
   @override

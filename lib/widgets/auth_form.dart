@@ -1,9 +1,10 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_todo_online/models/api.dart';
-import 'package:flutter_todo_online/models/constants.dart';
 import 'package:provider/provider.dart';
+
+import '../models/api.dart';
+import '../models/constants.dart';
 
 class AuthForm extends StatefulWidget {
   const AuthForm({Key? key}) : super(key: key);

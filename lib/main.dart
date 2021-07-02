@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_todo_online/models/api.dart';
-import 'package:flutter_todo_online/screens/auth_screen.dart';
-import 'package:flutter_todo_online/screens/home_screen.dart';
 import 'package:provider/provider.dart';
+
+import 'models/api.dart';
+import 'screens/auth_screen.dart';
+import 'screens/home_screen.dart';
 
 void main() {
   runApp(MyApp());

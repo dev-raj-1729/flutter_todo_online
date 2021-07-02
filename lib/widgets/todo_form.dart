@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_todo_online/models/api.dart';
-import 'package:flutter_todo_online/models/constants.dart';
-import 'package:flutter_todo_online/models/todo_item.dart';
-import 'package:flutter_todo_online/widgets/alert.dart';
 import 'package:provider/provider.dart';
+
+import '../models/api.dart';
+import '../models/constants.dart';
+import '../models/todo_item.dart';
+import 'alert.dart';
 
 class TodoForm extends StatefulWidget {
   final TodoItem? todoItem;

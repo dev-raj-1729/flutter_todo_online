@@ -1,11 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_todo_online/models/constants.dart';
-import 'package:flutter_todo_online/models/todo_item.dart';
-import 'package:flutter_todo_online/models/user.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'constants.dart';
+import 'todo_item.dart';
+import 'user.dart';
 
 class Api with ChangeNotifier {
   static const _apiEndpoint = 'https://todo-app-csoc.herokuapp.com';
@@ -37,7 +39,6 @@ class Api with ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
     if (_token == null) {
       _token = prefs.getString('token');
-      print(_token);
       notifyListeners();
       if (_token != null) {
         _authHeader = {HttpHeaders.authorizationHeader: "Token $_token"};
@@ -72,8 +73,6 @@ class Api with ChangeNotifier {
         .get(Uri.parse('$_apiEndpoint/$_profile'), headers: _authHeader)
         .then((response) {
       final responseData = json.decode(response.body);
-      print(response.statusCode);
-      print(responseData);
       _user = User.fromMap(responseData);
       notifyListeners();
       _userImage = NetworkImage('https://ui-avatars.com/api/'
@@ -94,14 +93,12 @@ class Api with ChangeNotifier {
       "username": username,
       "password": password,
     }).then((response) {
-      print(response.body);
-      print(response.statusCode);
       final responseData = json.decode(response.body);
       if (response.statusCode != 200) {
         return _authErrorResolver(responseData);
       }
       _token = responseData['token'];
-      _authHeader = {HttpHeaders.authorizationHeader: _token!};
+      _authHeader = {HttpHeaders.authorizationHeader: 'Token $_token'};
       notifyListeners();
       _saveUserToken();
     });
@@ -112,8 +109,6 @@ class Api with ChangeNotifier {
       "username": username,
       "password": password,
     }).then((response) {
-      print(response.body);
-      print(response.statusCode);
       final responseData = json.decode(response.body);
       if (response.statusCode != 200) {
         return _authErrorResolver(responseData);
@@ -140,7 +135,6 @@ class Api with ChangeNotifier {
   }
 
   Future<void> fetchTodos() {
-    print(_authHeader);
     return http
         .get(Uri.parse('$_apiEndpoint/$_getTodos'), headers: _authHeader)
         .then(

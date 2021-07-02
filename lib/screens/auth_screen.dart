@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_todo_online/widgets/auth_form.dart';
+import '../widgets/auth_form.dart';
 
 class AuthScreen extends StatelessWidget {
   static const routeName = '/auth';
