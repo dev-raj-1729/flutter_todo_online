@@ -49,7 +49,10 @@ class _TodoFormState extends State<TodoForm> {
         child: Column(
           children: [
             TextFormField(
-              decoration: InputDecoration(labelText: 'Title'),
+              decoration: InputDecoration(
+                  labelText: 'Title',
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10))),
               initialValue:
                   widget.todoItem != null ? widget.todoItem!.title : null,
               validator: (title) {
@@ -69,7 +72,7 @@ class _TodoFormState extends State<TodoForm> {
               alignment: Alignment.centerRight,
               child: ElevatedButton(
                 onPressed: _submitForm,
-                child: Text('Ok'),
+                child: Text('Add'),
               ),
             ),
           ],
