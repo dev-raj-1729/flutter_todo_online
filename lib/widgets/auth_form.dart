@@ -34,7 +34,7 @@ class _AuthFormState extends State<AuthForm> {
     });
   }
 
-  void _submitForm() {
+  void _submitForm() async {
     if (_formKey.currentState!.validate() == false) {
       return;
     }
@@ -43,28 +43,35 @@ class _AuthFormState extends State<AuthForm> {
       _loggingIn = true;
       _message = null;
     });
-    if (_authMode == AuthMode.signUp) {
-      Provider.of<Api>(context, listen: false)
-          .signUp(
-        name: _name,
-        email: _email,
-        username: _username,
-        password: _password,
-      )
-          .then((message) {
-        setState(() {
-          _loggingIn = false;
-          _message = message;
+    try {
+      if (_authMode == AuthMode.signUp) {
+        await Provider.of<Api>(context, listen: false)
+            .signUp(
+          name: _name,
+          email: _email,
+          username: _username,
+          password: _password,
+        )
+            .then((message) {
+          setState(() {
+            _loggingIn = false;
+            _message = message;
+          });
         });
-      });
-    } else {
-      Provider.of<Api>(context, listen: false)
-          .signIn(_username, _password)
-          .then((message) {
-        setState(() {
-          _loggingIn = false;
-          _message = message;
+      } else {
+        await Provider.of<Api>(context, listen: false)
+            .signIn(_username, _password)
+            .then((message) {
+          setState(() {
+            _loggingIn = false;
+            _message = message;
+          });
         });
+      }
+    } catch (_) {
+      setState(() {
+        _message = ErrorMessages.someError;
+        _loggingIn = false;
       });
     }
   }
