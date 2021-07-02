@@ -5,6 +5,7 @@ import 'package:flutter_todo_online/models/constants.dart';
 import 'package:flutter_todo_online/models/todo_item.dart';
 import 'package:flutter_todo_online/models/user.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Api with ChangeNotifier {
   static const _apiEndpoint = 'https://todo-app-csoc.herokuapp.com';
@@ -20,6 +21,10 @@ class Api with ChangeNotifier {
   // TODO : add / at end of all links
   List<TodoItem> _todos = [];
 
+  Api() {
+    _retrieveUserToken();
+  }
+
   User? get user {
     if (_user == null) return null;
     return User(
@@ -28,6 +33,30 @@ class Api with ChangeNotifier {
 
   NetworkImage? get userImage {
     return _userImage;
+  }
+
+  void _retrieveUserToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    if (_token == null) {
+      _token = prefs.getString('token');
+      print(_token);
+      notifyListeners();
+      if (_token != null) {
+        _authHeader = {HttpHeaders.authorizationHeader: "Token $_token"};
+        fetchUserInfo();
+      }
+    }
+  }
+
+  void _saveUserToken() async {
+    if (_token == null) return;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('token', _token!);
+  }
+
+  void _deleteUserToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('token');
   }
 
   String _errorResolver(Map<String, dynamic>? emap) {
@@ -76,6 +105,7 @@ class Api with ChangeNotifier {
       _token = responseData['token'];
       _authHeader = {HttpHeaders.authorizationHeader: _token!};
       notifyListeners();
+      _saveUserToken();
     });
   }
 
@@ -94,6 +124,7 @@ class Api with ChangeNotifier {
       _authHeader = {HttpHeaders.authorizationHeader: 'Token $_token'};
       notifyListeners();
       fetchUserInfo();
+      _saveUserToken();
     });
   }
 
@@ -102,6 +133,7 @@ class Api with ChangeNotifier {
     _todos = [];
     _authHeader = {};
     _user = null;
+    _deleteUserToken();
     notifyListeners();
   }
 
