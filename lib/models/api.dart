@@ -20,7 +20,6 @@ class Api with ChangeNotifier {
   Map<String, String> _authHeader = {};
   // TODO : add / at end of all links
   List<TodoItem> _todos = [];
-
   Api() {
     _retrieveUserToken();
   }
@@ -59,7 +58,7 @@ class Api with ChangeNotifier {
     await prefs.remove('token');
   }
 
-  String _errorResolver(Map<String, dynamic>? emap) {
+  String _authErrorResolver(Map<String, dynamic>? emap) {
     if (emap == null) {
       return ErrorMessages.someError;
     } else if (emap['non_field_errors'] != null) {
@@ -100,7 +99,7 @@ class Api with ChangeNotifier {
       print(response.statusCode);
       final responseData = json.decode(response.body);
       if (response.statusCode != 200) {
-        return _errorResolver(responseData);
+        return _authErrorResolver(responseData);
       }
       _token = responseData['token'];
       _authHeader = {HttpHeaders.authorizationHeader: _token!};
@@ -118,7 +117,7 @@ class Api with ChangeNotifier {
       print(response.statusCode);
       final responseData = json.decode(response.body);
       if (response.statusCode != 200) {
-        return _errorResolver(responseData);
+        return _authErrorResolver(responseData);
       }
       _token = responseData['token'];
       _authHeader = {HttpHeaders.authorizationHeader: 'Token $_token'};
@@ -147,10 +146,12 @@ class Api with ChangeNotifier {
         .get(Uri.parse('$_apiEndpoint/$_getTodos'), headers: _authHeader)
         .then(
       (response) {
+        if (response.statusCode != 200) {
+          throw Exception("Try Again Later");
+        }
         final responseData = json.decode(response.body);
         _todos = [];
         // TODO : Remove debug statements
-        print(responseData);
         responseData.forEach(
           (map) {
             _todos.add(TodoItem.fromMap(map));
@@ -168,41 +169,61 @@ class Api with ChangeNotifier {
         .post(Uri.parse('$_apiEndpoint/$_create'),
             body: {"title": title}, headers: _authHeader)
         .then((response) {
-      print(response.body);
+      if (response.statusCode != 200) {
+        _todos.removeWhere(
+            (element) => element.id == null && element.title == title);
+        notifyListeners();
+        throw Exception("Try Again Later");
+      }
       fetchTodos();
     });
   }
 
-  void removeById(int id) {
-    print(id);
+  void removeById(int id) async {
     final index = _todos.indexWhere((element) => element.id == id);
     final temp = _todos[index];
     _todos.removeAt(index);
     notifyListeners();
-    http
-        .delete(
-      Uri.parse('$_apiEndpoint/$_getTodos${temp.id}/'),
-      headers: _authHeader,
-    )
-        .then((value) {
+    try {
+      await http
+          .delete(
+        Uri.parse('$_apiEndpoint/$_getTodos${temp.id}/'),
+        headers: _authHeader,
+      )
+          .then((response) {
+        if (response.statusCode != 204) {
+          throw Exception('Try Again Later');
+        }
+      });
+    } catch (e) {
+      _todos.insert(index, temp);
       notifyListeners();
-      print(value.statusCode);
-    });
+      rethrow;
+    }
   }
 
-  void updateById(int id, String title) {
+  void updateById(int id, String title) async {
     final index = _todos.indexWhere((element) => element.id == id);
+    final temp = _todos[index].title;
     _todos[index].title = title;
     notifyListeners();
-    http
-        .patch(
-          Uri.parse('$_apiEndpoint/$_getTodos${_todos[index].id}/'),
-          body: {"title": title},
-          headers: _authHeader,
-        )
-        .then(
-          (value) => print(value.statusCode),
-        );
+    try {
+      await http
+          .patch(
+        Uri.parse('$_apiEndpoint/$_getTodos${_todos[index].id}/'),
+        body: {"title": title},
+        headers: _authHeader,
+      )
+          .then((response) {
+        if (response.statusCode != 200) {
+          throw Exception('Try Again Later');
+        }
+      });
+    } on Exception catch (e) {
+      _todos[index].title = temp;
+      notifyListeners();
+      rethrow;
+    }
   }
 
   List<TodoItem> searchFor(String sub) {

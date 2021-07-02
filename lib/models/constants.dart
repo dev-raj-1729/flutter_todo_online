@@ -12,4 +12,7 @@ final emailRegExp = RegExp(
 class ErrorMessages {
   static const invalidCred = "Invalid Credentials!";
   static const someError = "Some Error Occured";
+  String getErrorMessage(Exception e) {
+    return someError;
+  }
 }
