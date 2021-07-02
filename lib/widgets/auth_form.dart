@@ -104,9 +104,12 @@ class _AuthFormState extends State<AuthForm> {
                         labelText: 'Name',
                       ),
                       validator: (name) {
-                        if (name != null && (name.trim()).isNotEmpty) {
+                        if (name != null &&
+                            (name.trim()).isNotEmpty &&
+                            name.trim().length < 140) {
                           return null;
-                        }
+                        } else if (name != null && name.trim().length > 140)
+                          return 'Name cannot be more than 140 characters';
                         return 'Please enter your name';
                       },
                       onSaved: (name) {
@@ -119,7 +122,9 @@ class _AuthFormState extends State<AuthForm> {
                         labelText: 'Email',
                       ),
                       validator: (email) {
-                        if (email != null && emailRegExp.hasMatch(email)) {
+                        if (email != null &&
+                            emailRegExp.hasMatch(email) &&
+                            email.length <= 254) {
                           return null;
                         }
                         return 'Please enter a valid email';
@@ -137,8 +142,8 @@ class _AuthFormState extends State<AuthForm> {
                         return 'Please enter a username';
                       } else if (!usernameRegExp.hasMatch(username)) {
                         return 'Username can contain letters,digits and @, ., +, -, _ only';
-                      } else if (username.length > 150) {
-                        return 'Username cannot be more 150 characters';
+                      } else if (username.length > 140) {
+                        return 'Username cannot be more than 140 characters';
                       }
                     },
                     onSaved: (username) {
@@ -152,7 +157,8 @@ class _AuthFormState extends State<AuthForm> {
                     validator: (password) {
                       if (password == null || password.isEmpty) {
                         return 'Please enter a password';
-                      }
+                      } else if (password.length > 140)
+                        return 'Password cannot be more than 140 characters';
                     },
                     onSaved: (password) {
                       _password = password!;

@@ -18,7 +18,6 @@ class Api with ChangeNotifier {
   NetworkImage? _userImage;
   String? _token;
   Map<String, String> _authHeader = {};
-  // TODO : add / at end of all links
   List<TodoItem> _todos = [];
   Api() {
     _retrieveUserToken();

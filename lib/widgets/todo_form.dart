@@ -56,8 +56,12 @@ class _TodoFormState extends State<TodoForm> {
               initialValue:
                   widget.todoItem != null ? widget.todoItem!.title : null,
               validator: (title) {
-                if (title != null && title.trim().isNotEmpty) {
+                if (title != null &&
+                    title.trim().isNotEmpty &&
+                    title.trim().length <= 140) {
                   return null;
+                } else if (title != null && title.trim().length > 140) {
+                  return 'Title cannot be more than 140 characters';
                 }
                 return "Title cannot be empty";
               },
