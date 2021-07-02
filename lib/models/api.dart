@@ -206,7 +206,7 @@ class Api with ChangeNotifier {
     }
   }
 
-  void updateById(int id, String title) async {
+  Future<void> updateById(int id, String title) async {
     final index = _todos.indexWhere((element) => element.id == id);
     final temp = _todos[index].title;
     _todos[index].title = title;

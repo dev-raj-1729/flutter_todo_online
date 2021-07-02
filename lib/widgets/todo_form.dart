@@ -28,12 +28,15 @@ class _TodoFormState extends State<TodoForm> {
       if (widget.todoItem == null) {
         await Provider.of<Api>(context, listen: false).addTodo(_title);
       } else {
-        Provider.of<Api>(context, listen: false)
+        await Provider.of<Api>(context, listen: false)
             .updateById(widget.todoItem!.id!, _title);
       }
     } on Exception catch (e) {
       final message = ErrorMessages.getErrorMessage(e);
-      Alerts.errorSnackBar(context, 'Falied To Add Todo. $message');
+      Alerts.errorSnackBar(
+          context,
+          'Failed to ${widget.todoItem == null ? 'Add Todo' : 'Update Todo'}. '
+          '$message');
     }
   }
 
