@@ -10,14 +10,25 @@ class Api with ChangeNotifier {
   static const _apiEndpoint = 'https://todo-app-csoc.herokuapp.com';
   static const _register = 'auth/register';
   static const _login = 'auth/login';
-  static const _profile = 'auth/profile';
+  static const _profile = 'auth/profile/';
   static const _getTodos = 'todo/';
   static const _create = 'todo/create/';
   User? _user;
+  NetworkImage? _userImage;
   String? _token;
   Map<String, String> _authHeader = {};
   // TODO : add / at end of all links
   List<TodoItem> _todos = [];
+
+  User? get user {
+    if (user == null) return null;
+    return User(
+        email: _user!.email, name: _user!.name, username: _user!.username);
+  }
+
+  NetworkImage? get userImage {
+    return _userImage;
+  }
 
   String _errorResolver(Map<String, dynamic>? emap) {
     if (emap == null) {
@@ -27,6 +38,20 @@ class Api with ChangeNotifier {
     } else {
       return emap.values.toList()[0][0];
     }
+  }
+
+  Future<void> fetchUserInfo() {
+    return http
+        .get(Uri.parse('$_apiEndpoint/$_profile'), headers: _authHeader)
+        .then((response) {
+      final responseData = json.decode(response.body);
+      print(response.statusCode);
+      print(responseData);
+      _user = User.fromMap(responseData);
+      notifyListeners();
+      _userImage = NetworkImage('https://ui-avatars.com/api/'
+          '?name=${_user!.name.replaceAll(" ", "+")}');
+    });
   }
 
   Future<String?> signUp({
@@ -68,6 +93,7 @@ class Api with ChangeNotifier {
       _token = responseData['token'];
       _authHeader = {HttpHeaders.authorizationHeader: 'Token $_token'};
       notifyListeners();
+      fetchUserInfo();
     });
   }
 
