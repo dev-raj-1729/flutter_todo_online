@@ -1,3 +1,5 @@
+import 'dart:io';
+
 enum AuthMode {
   signIn,
   signUp,
@@ -12,7 +14,10 @@ final emailRegExp = RegExp(
 class ErrorMessages {
   static const invalidCred = "Invalid Credentials!";
   static const someError = "Some Error Occured";
-  String getErrorMessage(Exception e) {
-    return someError;
+  static String getErrorMessage(Exception e) {
+    if (e is SocketException) {
+      return "No Internet Connection";
+    }
+    return e.toString();
   }
 }

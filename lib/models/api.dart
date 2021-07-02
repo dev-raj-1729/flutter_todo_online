@@ -162,21 +162,25 @@ class Api with ChangeNotifier {
     );
   }
 
-  void addTodo(String title) {
+  Future<void> addTodo(String title) async {
     _todos.add(TodoItem(title));
     notifyListeners();
-    http
-        .post(Uri.parse('$_apiEndpoint/$_create'),
-            body: {"title": title}, headers: _authHeader)
-        .then((response) {
-      if (response.statusCode != 200) {
-        _todos.removeWhere(
-            (element) => element.id == null && element.title == title);
-        notifyListeners();
-        throw Exception("Try Again Later");
-      }
-      fetchTodos();
-    });
+    try {
+      await http
+          .post(Uri.parse('$_apiEndpoint/$_create'),
+              body: {"title": title}, headers: _authHeader)
+          .then((response) {
+        if (response.statusCode != 200) {
+          throw Exception("Try Again Later");
+        }
+        fetchTodos();
+      });
+    } on Exception catch (_) {
+      _todos.removeWhere(
+          (element) => element.id == null && element.title == title);
+      notifyListeners();
+      rethrow;
+    }
   }
 
   void removeById(int id) async {
@@ -219,7 +223,7 @@ class Api with ChangeNotifier {
           throw Exception('Try Again Later');
         }
       });
-    } on Exception catch (e) {
+    } catch (e) {
       _todos[index].title = temp;
       notifyListeners();
       rethrow;

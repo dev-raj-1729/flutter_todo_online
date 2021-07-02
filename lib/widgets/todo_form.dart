@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_todo_online/models/api.dart';
+import 'package:flutter_todo_online/models/constants.dart';
 import 'package:flutter_todo_online/models/todo_item.dart';
+import 'package:flutter_todo_online/widgets/alert.dart';
 import 'package:provider/provider.dart';
 
 class TodoForm extends StatefulWidget {
@@ -15,18 +17,24 @@ class _TodoFormState extends State<TodoForm> {
   final _formKey = GlobalKey<FormState>();
   String _title = '';
 
-  void _submitForm() {
+  void _submitForm() async {
     if (_formKey.currentState!.validate() == false) {
       return;
     }
     _formKey.currentState!.save();
-    if (widget.todoItem == null) {
-      Provider.of<Api>(context, listen: false).addTodo(_title);
-    } else {
-      Provider.of<Api>(context, listen: false)
-          .updateById(widget.todoItem!.id!, _title);
-    }
     Navigator.of(context).pop();
+
+    try {
+      if (widget.todoItem == null) {
+        await Provider.of<Api>(context, listen: false).addTodo(_title);
+      } else {
+        Provider.of<Api>(context, listen: false)
+            .updateById(widget.todoItem!.id!, _title);
+      }
+    } on Exception catch (e) {
+      final message = ErrorMessages.getErrorMessage(e);
+      Alerts.errorSnackBar(context, 'Falied To Add Todo. $message');
+    }
   }
 
   @override
