@@ -18,7 +18,9 @@ class UserDrawer extends StatelessWidget {
                   height: 10,
                 ),
                 CircleAvatar(
-                  backgroundImage: apiProvider.userImage,
+                  foregroundImage: apiProvider.userImage,
+                  backgroundImage: AssetImage('assets/images/blank-avatar.png'),
+                  onForegroundImageError: (_, __) => {},
                   radius: 40,
                 ),
                 SizedBox(

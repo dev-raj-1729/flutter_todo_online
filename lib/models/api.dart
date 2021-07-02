@@ -30,7 +30,7 @@ class Api with ChangeNotifier {
         email: _user!.email, name: _user!.name, username: _user!.username);
   }
 
-  NetworkImage? get userImage {
+  ImageProvider? get userImage {
     return _userImage;
   }
 
