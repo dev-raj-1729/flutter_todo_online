@@ -68,9 +68,9 @@ class _AuthFormState extends State<AuthForm> {
           });
         });
       }
-    } catch (_) {
+    } on Exception catch (e) {
       setState(() {
-        _message = ErrorMessages.someError;
+        _message = ErrorMessages.getErrorMessage(e);
         _loggingIn = false;
       });
     }
