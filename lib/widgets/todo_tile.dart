@@ -22,7 +22,7 @@ class TodoTile extends StatelessWidget {
               .removeById(todoItem.id!);
         } on Exception catch (e) {
           final message = ErrorMessages.getErrorMessage(e);
-          showError(message);
+          showError('Failed to Delete Todo. $message');
         }
       },
       direction: todoItem.id == null
