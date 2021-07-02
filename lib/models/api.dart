@@ -54,7 +54,7 @@ class Api with ChangeNotifier {
     });
   }
 
-  Future<void> signIn(String username, String password) {
+  Future<String?> signIn(String username, String password) {
     return http.post(Uri.parse('$_apiEndpoint/$_login/'), body: {
       "username": username,
       "password": password,

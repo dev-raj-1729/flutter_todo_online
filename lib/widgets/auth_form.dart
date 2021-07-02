@@ -63,6 +63,7 @@ class _AuthFormState extends State<AuthForm> {
           .then((message) {
         setState(() {
           _loggingIn = false;
+          _message = message;
         });
       });
     }
