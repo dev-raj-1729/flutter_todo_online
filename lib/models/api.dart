@@ -9,8 +9,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class Api with ChangeNotifier {
   static const _apiEndpoint = 'https://todo-app-csoc.herokuapp.com';
-  static const _register = 'auth/register';
-  static const _login = 'auth/login';
+  static const _register = 'auth/register/';
+  static const _login = 'auth/login/';
   static const _profile = 'auth/profile/';
   static const _getTodos = 'todo/';
   static const _create = 'todo/create/';
@@ -89,7 +89,7 @@ class Api with ChangeNotifier {
     required String password,
   }) {
     _user = User(name: name, email: email, username: username);
-    return http.post(Uri.parse('$_apiEndpoint/$_register/'), body: {
+    return http.post(Uri.parse('$_apiEndpoint/$_register'), body: {
       "name": name,
       "email": email,
       "username": username,
@@ -109,7 +109,7 @@ class Api with ChangeNotifier {
   }
 
   Future<String?> signIn(String username, String password) {
-    return http.post(Uri.parse('$_apiEndpoint/$_login/'), body: {
+    return http.post(Uri.parse('$_apiEndpoint/$_login'), body: {
       "username": username,
       "password": password,
     }).then((response) {
